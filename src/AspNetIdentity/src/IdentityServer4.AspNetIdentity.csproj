@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <PackageId>IdentityServer4.AspNetIdentity</PackageId>
+    <PackageId>Tec.IdentityServer4.AspNetIdentity</PackageId>
     <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
     
     <Description>ASP.NET Core Identity Integration for IdentityServer4</Description>
@@ -39,7 +39,7 @@
   </ItemGroup>
     
   <ItemGroup>
-    <PackageReference Include="IdentityServer4" />
+    <PackageReference Include="Tec.IdentityServer4" />
     
     <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
   </ItemGroup>
