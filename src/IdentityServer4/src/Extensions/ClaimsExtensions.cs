@@ -1,9 +1,8 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
 using IdentityModel;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -13,6 +12,7 @@ namespace IdentityServer4.Extensions
 {
     internal static class ClaimsExtensions
     {
+        // should not throws exception
         public static Dictionary<string, object> ToClaimsDictionary(this IEnumerable<Claim> claims)
         {
             var d = new Dictionary<string, object>();
@@ -28,7 +28,7 @@ namespace IdentityServer4.Extensions
             {
                 if (!d.ContainsKey(claim.Type))
                 {
-                    d.Add(claim.Type, GetValue(claim));
+                    d.Add(claim.Type, SafeGetValue(claim));
                 }
                 else
                 {
@@ -36,12 +36,12 @@ namespace IdentityServer4.Extensions
 
                     if (value is List<object> list)
                     {
-                        list.Add(GetValue(claim));
+                        list.Add(SafeGetValue(claim));
                     }
                     else
                     {
                         d.Remove(claim.Type);
-                        d.Add(claim.Type, new List<object> { value, GetValue(claim) });
+                        d.Add(claim.Type, new List<object> { value, SafeGetValue(claim) });
                     }
                 }
             }
@@ -49,12 +49,12 @@ namespace IdentityServer4.Extensions
             return d;
         }
 
-        private static object GetValue(Claim claim)
+        // should not throws exception, similar implementation with TokenExtensions.AddObject(Claim claim)
+        private static object SafeGetValue(Claim claim)
         {
-            if (claim.ValueType == ClaimValueTypes.Integer ||
-                claim.ValueType == ClaimValueTypes.Integer32)
+            if (claim.ValueType == ClaimValueTypes.Integer || claim.ValueType == ClaimValueTypes.Integer32)
             {
-                if (Int32.TryParse(claim.Value, out int value))
+                if (int.TryParse(claim.Value, out int value))
                 {
                     return value;
                 }
@@ -62,7 +62,7 @@ namespace IdentityServer4.Extensions
 
             if (claim.ValueType == ClaimValueTypes.Integer64)
             {
-                if (Int64.TryParse(claim.Value, out long value))
+                if (long.TryParse(claim.Value, out long value))
                 {
                     return value;
                 }
@@ -70,7 +70,7 @@ namespace IdentityServer4.Extensions
 
             if (claim.ValueType == ClaimValueTypes.Boolean)
             {
-                if (bool.TryParse(claim.Value, out bool value))
+                if (bool.TryParse(claim.Value, out var value))
                 {
                     return value;
                 }
@@ -80,7 +80,7 @@ namespace IdentityServer4.Extensions
             {
                 try
                 {
-                    return System.Text.Json.JsonSerializer.Deserialize<JsonElement>(claim.Value);
+                    return JsonSerializer.Deserialize<JsonElement>(claim.Value);
                 }
                 catch { }
             }

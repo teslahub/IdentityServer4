@@ -1,4 +1,4 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -7,8 +7,8 @@ using IdentityServer4.Models;
 using Microsoft.Extensions.Logging;
 using System.Net.Http;
 using System.Threading.Tasks;
-using IdentityModel;
 using IdentityServer4.Configuration;
+using IdentityModel;
 
 namespace IdentityServer4.Services
 {

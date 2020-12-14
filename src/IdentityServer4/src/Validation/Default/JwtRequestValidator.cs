@@ -2,11 +2,6 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Threading.Tasks;
 using IdentityModel;
 using IdentityServer4.Configuration;
 using IdentityServer4.Extensions;
@@ -14,8 +9,11 @@ using IdentityServer4.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace IdentityServer4.Validation
 {
@@ -26,7 +24,7 @@ namespace IdentityServer4.Validation
     {
         private readonly string _audienceUri;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        
+
         /// <summary>
         /// JWT handler
         /// </summary>
@@ -55,7 +53,7 @@ namespace IdentityServer4.Validation
         /// The logger
         /// </summary>
         protected readonly ILogger Logger;
-        
+
         /// <summary>
         /// The optione
         /// </summary>
@@ -67,7 +65,7 @@ namespace IdentityServer4.Validation
         public JwtRequestValidator(IHttpContextAccessor contextAccessor, IdentityServerOptions options, ILogger<JwtRequestValidator> logger)
         {
             _httpContextAccessor = contextAccessor;
-            
+
             Options = options;
             Logger = logger;
         }
@@ -90,7 +88,7 @@ namespace IdentityServer4.Validation
         public virtual async Task<JwtRequestValidationResult> ValidateAsync(Client client, string jwtTokenString)
         {
             if (client == null) throw new ArgumentNullException(nameof(client));
-            if (String.IsNullOrWhiteSpace(jwtTokenString)) throw new ArgumentNullException(nameof(jwtTokenString));
+            if (string.IsNullOrWhiteSpace(jwtTokenString)) throw new ArgumentNullException(nameof(jwtTokenString));
 
             var fail = new JwtRequestValidationResult { IsError = true };
 
@@ -181,8 +179,8 @@ namespace IdentityServer4.Validation
             }
 
             Handler.ValidateToken(jwtTokenString, tokenValidationParameters, out var token);
-            
-            return Task.FromResult((JwtSecurityToken)token);
+
+            return Task.FromResult((JwtSecurityToken) token);
         }
 
         /// <summary>
@@ -199,19 +197,7 @@ namespace IdentityServer4.Validation
                 if (!Constants.Filters.JwtRequestClaimTypesFilter.Contains(key))
                 {
                     var value = token.Payload[key];
-
-                    switch (value)
-                    {
-                        case string s:
-                            payload.Add(key, s);
-                            break;
-                        case JObject jobj:
-                            payload.Add(key, jobj.ToString(Formatting.None));
-                            break;
-                        case JArray jarr:
-                            payload.Add(key, jarr.ToString(Formatting.None));
-                            break;
-                    }
+                    payload.Add(key, value.ToString());
                 }
             }
 
