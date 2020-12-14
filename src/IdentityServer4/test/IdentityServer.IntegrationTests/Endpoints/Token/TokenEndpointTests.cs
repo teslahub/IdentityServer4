@@ -1,13 +1,13 @@
-﻿using FluentAssertions;
+using FluentAssertions;
+using IdentityServer.IntegrationTests.Common;
 using IdentityServer4.Models;
 using IdentityServer4.Test;
-using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using IdentityServer.IntegrationTests.Common;
+using Testing.Dynamic;
 using Xunit;
 
 namespace IdentityServer.IntegrationTests.Endpoints.Token
@@ -16,13 +16,13 @@ namespace IdentityServer.IntegrationTests.Endpoints.Token
     {
         private const string Category = "Token endpoint";
 
-        private string client_id = "client";
-        private string client_secret = "secret";
+        private readonly string client_id = "client";
+        private readonly string client_secret = "secret";
 
-        private string scope_name = "api";
-        private string scope_secret = "api_secret";
+        private readonly string scope_name = "api";
+        private readonly string scope_secret = "api_secret";
 
-        private IdentityServerPipeline _mockPipeline = new IdentityServerPipeline();
+        private readonly IdentityServerPipeline _mockPipeline = new IdentityServerPipeline();
 
         public TokenEndpointTests()
         {
@@ -88,7 +88,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Token
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             var json = await response.Content.ReadAsStringAsync();
-            var result = JObject.Parse(json);
+            var result = DJson.Parse(json).InnerDict;
             result.ContainsKey("error").Should().BeFalse();
         }
 
@@ -111,7 +111,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Token
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             var json = await response.Content.ReadAsStringAsync();
-            var result = JObject.Parse(json);
+            var result = DJson.Parse(json).InnerDict;
             result.ContainsKey("error").Should().BeFalse();
         }
     }

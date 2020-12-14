@@ -2,14 +2,6 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Net.Http;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 using FluentAssertions;
 using IdentityModel;
 using IdentityModel.Client;
@@ -18,8 +10,13 @@ using IdentityServer.IntegrationTests.Common;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Net.Http;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace IdentityServer.IntegrationTests.Clients
@@ -101,7 +98,7 @@ namespace IdentityServer.IntegrationTests.Clients
 
             AssertValidToken(response);
         }
-        
+
         [Fact]
         public async Task Valid_client_with_token_replay_should_fail()
         {
@@ -122,7 +119,7 @@ namespace IdentityServer.IntegrationTests.Clients
             });
 
             AssertValidToken(response);
-            
+
             // replay
             response = await _client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
             {
@@ -203,26 +200,17 @@ namespace IdentityServer.IntegrationTests.Clients
             response.IdentityToken.Should().BeNull();
             response.RefreshToken.Should().BeNull();
 
-            var payload = GetPayload(response);
-            
+            var payload = JsonHelper.GetPayload(response);
+
             payload.Count().Should().Be(8);
             payload.Should().Contain("iss", "https://idsvr4");
             payload.Should().Contain("client_id", ClientId);
             payload.Keys.Should().Contain("iat");
-            
-            var scopes = payload["scope"] as JArray;
+
+            var scopes = payload["scope"].AsDJsonInnerList();
             scopes.First().ToString().Should().Be("api1");
 
             payload["aud"].Should().Be("api");
-        }
-
-        private Dictionary<string, object> GetPayload(TokenResponse response)
-        {
-            var token = response.AccessToken.Split('.').Skip(1).Take(1).First();
-            var dictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(
-                Encoding.UTF8.GetString(Base64Url.Decode(token)));
-
-            return dictionary;
         }
 
         private string CreateToken(string clientId, DateTime? nowOverride = null)

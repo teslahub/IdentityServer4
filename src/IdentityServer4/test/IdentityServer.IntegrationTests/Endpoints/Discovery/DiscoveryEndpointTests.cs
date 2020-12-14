@@ -10,9 +10,9 @@ using IdentityServer4.Configuration;
 using IdentityServer4.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json.Linq;
 using System.Linq;
 using System.Threading.Tasks;
+using Testing.Dynamic;
 using Xunit;
 using JsonWebKey = Microsoft.IdentityModel.Tokens.JsonWebKey;
 
@@ -32,8 +32,8 @@ namespace IdentityServer.IntegrationTests.Endpoints.Discovery
             var result = await pipeline.BackChannelClient.GetAsync("HTTPS://SERVER/ROOT/.WELL-KNOWN/OPENID-CONFIGURATION");
 
             var json = await result.Content.ReadAsStringAsync();
-            var data = JObject.Parse(json);
-            var issuer = data["issuer"].ToString();
+            var data = JsonHelper.ToDictionary(json);
+            var issuer = data["issuer"];
 
             issuer.Should().Be("https://server/root");
         }
@@ -50,15 +50,10 @@ namespace IdentityServer.IntegrationTests.Endpoints.Discovery
             var result = await pipeline.BackChannelClient.GetAsync("HTTPS://SERVER/ROOT/.WELL-KNOWN/OPENID-CONFIGURATION");
 
             var json = await result.Content.ReadAsStringAsync();
-            var data = JObject.Parse(json);
-            var issuer = data["issuer"].ToString();
+            var data = JsonHelper.ToDictionary(json);
+            var issuer = data["issuer"];
 
             issuer.Should().Be("https://server/ROOT");
-        }
-
-        private void Pipeline_OnPostConfigureServices(IServiceCollection obj)
-        {
-            throw new System.NotImplementedException();
         }
 
         [Fact]
@@ -80,13 +75,12 @@ namespace IdentityServer.IntegrationTests.Endpoints.Discovery
             var result = await pipeline.BackChannelClient.GetAsync("https://server/root/.well-known/openid-configuration");
 
             var json = await result.Content.ReadAsStringAsync();
-            var data = JObject.Parse(json);
-            var algorithmsSupported = data["id_token_signing_alg_values_supported"];
+            var data = JsonHelper.ToDictionary(json);
+            var algorithmsSupported = data["id_token_signing_alg_values_supported"].AsDJsonInnerList();
 
             algorithmsSupported.Count().Should().Be(2);
-
-            algorithmsSupported.Values().Should().Contain(SecurityAlgorithms.RsaSha256);
-            algorithmsSupported.Values().Should().Contain(SecurityAlgorithms.EcdsaSha256);
+            algorithmsSupported.Should().Contain(SecurityAlgorithms.RsaSha256);
+            algorithmsSupported.Should().Contain(SecurityAlgorithms.EcdsaSha256);
         }
 
         [Fact]
@@ -122,19 +116,18 @@ namespace IdentityServer.IntegrationTests.Endpoints.Discovery
             var result = await pipeline.BackChannelClient.GetAsync("https://server/root/.well-known/openid-configuration/jwks");
 
             var json = await result.Content.ReadAsStringAsync();
-            var data = JObject.Parse(json);
+            var data = JsonHelper.ToDictionary(json);
 
-            var keys = data["keys"];
+            var keys = data["keys"].AsDJsonInnerList().ToArray();
             keys.Should().NotBeNull();
 
-            var key = keys[1];
+            var key = keys[1] as DJson;
             key.Should().NotBeNull();
 
             var crv = key["crv"];
             crv.Should().NotBeNull();
 
-            crv.Value<string>().Should().Be(JsonWebKeyECTypes.P256);
-
+            crv.Should().Be(JsonWebKeyECTypes.P256);
         }
 
         [Fact]
@@ -147,18 +140,18 @@ namespace IdentityServer.IntegrationTests.Endpoints.Discovery
             var result = await pipeline.BackChannelClient.GetAsync("https://server/root/.well-known/openid-configuration/jwks");
 
             var json = await result.Content.ReadAsStringAsync();
-            var data = JObject.Parse(json);
+            var data = JsonHelper.ToDictionary(json);
 
-            var keys = data["keys"];
+            var keys = data["keys"].AsDJsonInnerList().ToArray();
             keys.Should().NotBeNull();
 
-            var key = keys[0];
+            var key = keys[0] as DJson;
             key.Should().NotBeNull();
 
             var alg = key["alg"];
             alg.Should().NotBeNull();
 
-            alg.Value<string>().Should().Be(Constants.SigningAlgorithms.RSA_SHA_256);
+            alg.Should().Be(Constants.SigningAlgorithms.RSA_SHA_256);
         }
 
         [Theory]

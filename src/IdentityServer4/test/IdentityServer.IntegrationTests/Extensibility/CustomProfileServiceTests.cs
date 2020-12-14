@@ -1,14 +1,14 @@
-﻿using System.Net;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 using FluentAssertions;
 using IdentityModel;
 using IdentityServer.IntegrationTests.Common;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json.Linq;
+using System.Net;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
+using Testing.Dynamic;
 using Xunit;
 
 namespace IdentityServer.IntegrationTests.Extensibility
@@ -17,7 +17,7 @@ namespace IdentityServer.IntegrationTests.Extensibility
     {
         private const string Category = "Authorize endpoint";
 
-        private IdentityServerPipeline _mockPipeline = new IdentityServerPipeline();
+        private readonly IdentityServerPipeline _mockPipeline = new IdentityServerPipeline();
 
         public CustomProfileServiceTests()
         {
@@ -73,10 +73,10 @@ namespace IdentityServer.IntegrationTests.Extensibility
 
             var payload = authorization.IdentityToken.Split('.')[1];
             var json = Encoding.UTF8.GetString(Base64Url.Decode(payload));
-            var obj = JObject.Parse(json);
+            var obj = DJson.Parse(json);
 
-            obj.GetValue("foo").Should().NotBeNull();
-            obj["foo"].ToString().Should().Be("bar");
+            obj["foo"].Should().NotBeNull();
+            obj["foo"].Should().Be("bar");
         }
     }
 

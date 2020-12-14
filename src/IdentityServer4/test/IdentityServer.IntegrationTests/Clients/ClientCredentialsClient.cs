@@ -2,20 +2,17 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 using FluentAssertions;
 using IdentityModel;
 using IdentityModel.Client;
 using IdentityServer.IntegrationTests.Clients.Setup;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Testing.Dynamic;
 using Xunit;
 
 namespace IdentityServer.IntegrationTests.Clients
@@ -69,17 +66,17 @@ namespace IdentityServer.IntegrationTests.Clients
             response.IdentityToken.Should().BeNull();
             response.RefreshToken.Should().BeNull();
 
-            var payload = GetPayload(response);
+            var payload = JsonHelper.GetPayload(response);
 
             payload.Count().Should().Be(8);
             payload.Should().Contain("iss", "https://idsvr4");
             payload.Should().Contain("client_id", "client");
             payload.Keys.Should().Contain("jti");
             payload.Keys.Should().Contain("iat");
-            
+
             payload["aud"].Should().Be("api");
 
-            var scopes = payload["scope"] as JArray;
+            var scopes = payload["scope"].AsDJsonInnerList();
             scopes.First().ToString().Should().Be("api1");
         }
 
@@ -100,7 +97,7 @@ namespace IdentityServer.IntegrationTests.Clients
             response.IdentityToken.Should().BeNull();
             response.RefreshToken.Should().BeNull();
 
-            var payload = GetPayload(response);
+            var payload = JsonHelper.GetPayload(response);
 
             payload.Count().Should().Be(8);
             payload.Should().Contain("iss", "https://idsvr4");
@@ -108,12 +105,12 @@ namespace IdentityServer.IntegrationTests.Clients
             payload.Keys.Should().Contain("jti");
             payload.Keys.Should().Contain("iat");
 
-            var audiences = ((JArray)payload["aud"]).Select(x => x.ToString());
+            var audiences = payload["aud"].AsDJsonInnerList();
             audiences.Count().Should().Be(2);
             audiences.Should().Contain("api");
             audiences.Should().Contain("other_api");
 
-            var scopes = payload["scope"] as JArray;
+            var scopes = payload["scope"].AsDJsonInnerList();
             scopes.First().ToString().Should().Be("api1");
         }
 
@@ -134,7 +131,7 @@ namespace IdentityServer.IntegrationTests.Clients
             response.IdentityToken.Should().BeNull();
             response.RefreshToken.Should().BeNull();
 
-            var payload = GetPayload(response);
+            var payload = JsonHelper.GetPayload(response);
 
             payload.Count().Should().Be(9);
             payload.Should().Contain("iss", "https://idsvr4");
@@ -144,10 +141,10 @@ namespace IdentityServer.IntegrationTests.Clients
 
             payload["aud"].Should().Be("api");
 
-            var scopes = payload["scope"] as JArray;
+            var scopes = payload["scope"].AsDJsonInnerList();
             scopes.First().ToString().Should().Be("api1");
 
-            var cnf = payload["cnf"] as JObject;
+            var cnf = payload["cnf"] as DJson;
             cnf["x5t#S256"].ToString().Should().Be("foo");
         }
 
@@ -168,17 +165,17 @@ namespace IdentityServer.IntegrationTests.Clients
             response.IdentityToken.Should().BeNull();
             response.RefreshToken.Should().BeNull();
 
-            var payload = GetPayload(response);
+            var payload = JsonHelper.GetPayload(response);
 
             payload.Count().Should().Be(8);
             payload.Should().Contain("iss", "https://idsvr4");
             payload.Should().Contain("client_id", "client");
             payload.Keys.Should().Contain("jti");
             payload.Keys.Should().Contain("iat");
-            
+
             payload["aud"].Should().Be("api");
 
-            var scopes = payload["scope"] as JArray;
+            var scopes = payload["scope"].AsDJsonInnerList();
             scopes.Count().Should().Be(2);
             scopes.First().ToString().Should().Be("api1");
             scopes.Skip(1).First().ToString().Should().Be("api2");
@@ -200,7 +197,7 @@ namespace IdentityServer.IntegrationTests.Clients
             response.IdentityToken.Should().BeNull();
             response.RefreshToken.Should().BeNull();
 
-            var payload = GetPayload(response);
+            var payload = JsonHelper.GetPayload(response);
 
             payload.Count().Should().Be(8);
             payload.Should().Contain("iss", "https://idsvr4");
@@ -208,12 +205,12 @@ namespace IdentityServer.IntegrationTests.Clients
             payload.Keys.Should().Contain("jti");
             payload.Keys.Should().Contain("iat");
 
-            var audiences = ((JArray)payload["aud"]).Select(x => x.ToString());
+            var audiences = payload["aud"].AsDJsonInnerList();
             audiences.Count().Should().Be(2);
             audiences.Should().Contain("api");
             audiences.Should().Contain("other_api");
 
-            var scopes = ((JArray)payload["scope"]).Select(x => x.ToString());
+            var scopes = payload["scope"].AsDJsonInnerList();
             scopes.Count().Should().Be(3);
             scopes.Should().Contain("api1");
             scopes.Should().Contain("api2");
@@ -257,17 +254,16 @@ namespace IdentityServer.IntegrationTests.Clients
             response.IdentityToken.Should().BeNull();
             response.RefreshToken.Should().BeNull();
 
-            var payload = GetPayload(response);
+            var payload = JsonHelper.GetPayload(response);
 
             payload.Should().Contain("iss", "https://idsvr4");
             payload.Should().Contain("client_id", "client");
 
             payload["aud"].Should().Be("api");
 
-            var scopes = payload["scope"] as JArray;
+            var scopes = payload["scope"].AsDJsonInnerList();
             scopes.First().ToString().Should().Be("api1");
         }
-
 
         [Fact]
         public async Task Request_For_client_with_no_secret_and_basic_authentication_should_succeed()
@@ -285,14 +281,14 @@ namespace IdentityServer.IntegrationTests.Clients
             response.IdentityToken.Should().BeNull();
             response.RefreshToken.Should().BeNull();
 
-            var payload = GetPayload(response);
-            
+            var payload = JsonHelper.GetPayload(response);
+
             payload.Should().Contain("iss", "https://idsvr4");
             payload.Should().Contain("client_id", "client.no_secret");
 
             payload["aud"].Should().Be("api");
 
-            var scopes = payload["scope"] as JArray;
+            var scopes = payload["scope"].AsDJsonInnerList();
             scopes.First().ToString().Should().Be("api1");
         }
 
@@ -360,7 +356,6 @@ namespace IdentityServer.IntegrationTests.Clients
             response.HttpStatusCode.Should().Be(HttpStatusCode.BadRequest);
             response.Error.Should().Be("invalid_client");
         }
-
 
         [Fact]
         public async Task Requesting_unknown_scope_should_fail()
@@ -445,15 +440,6 @@ namespace IdentityServer.IntegrationTests.Clients
             response.ErrorType.Should().Be(ResponseErrorType.Protocol);
             response.HttpStatusCode.Should().Be(HttpStatusCode.BadRequest);
             response.Error.Should().Be("invalid_scope");
-        }
-
-        private Dictionary<string, object> GetPayload(TokenResponse response)
-        {
-            var token = response.AccessToken.Split('.').Skip(1).Take(1).First();
-            var dictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(
-                Encoding.UTF8.GetString(Base64Url.Decode(token)));
-
-            return dictionary;
         }
     }
 }

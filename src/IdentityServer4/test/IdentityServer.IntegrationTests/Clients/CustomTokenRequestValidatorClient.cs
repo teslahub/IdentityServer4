@@ -2,14 +2,13 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Threading.Tasks;
 using FluentAssertions;
 using IdentityModel.Client;
 using IdentityServer.IntegrationTests.Clients.Setup;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using System.Net.Http;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace IdentityServer.IntegrationTests.Clients
@@ -44,7 +43,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 Scope = "api1"
             });
 
-            var fields = GetFields(response);
+            var fields = JsonHelper.ToDictionary(response);
             fields.Should().Contain("custom", "custom");
         }
 
@@ -63,7 +62,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 Password = "bob"
             });
 
-            var fields = GetFields(response);
+            var fields = JsonHelper.ToDictionary(response);
             fields.Should().Contain("custom", "custom");
         }
 
@@ -91,7 +90,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 RefreshToken = response.RefreshToken
             });
 
-            var fields = GetFields(response);
+            var fields = JsonHelper.ToDictionary(response);
             fields.Should().Contain("custom", "custom");
         }
 
@@ -113,13 +112,8 @@ namespace IdentityServer.IntegrationTests.Clients
                 }
             });
 
-            var fields = GetFields(response);
+            var fields = JsonHelper.ToDictionary(response);
             fields.Should().Contain("custom", "custom");
-        }
-
-        private Dictionary<string, object> GetFields(TokenResponse response)
-        {
-            return response.Json.ToObject<Dictionary<string, object>>();
         }
     }
 }
