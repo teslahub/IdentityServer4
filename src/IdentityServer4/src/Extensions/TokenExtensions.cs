@@ -135,7 +135,7 @@ namespace IdentityServer4.Extensions
                 return bool.Parse(claim.Value);
             }
 
-            if (claim.ValueType == ClaimValueTypes.Integer || claim.Type == ClaimValueTypes.Integer32)
+            if (claim.ValueType == ClaimValueTypes.Integer || claim.ValueType == ClaimValueTypes.Integer32)
             {
                 return int.Parse(claim.Value);
             }
