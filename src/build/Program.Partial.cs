@@ -16,6 +16,7 @@ namespace build
         {
             public const string CleanBuildOutput = "clean-build-output";
             public const string CleanPackOutput = "clean-pack-output";
+            public const string Restore = "restore";
             public const string Build = "build";
             public const string Test = "test";
             public const string Pack = "pack";
@@ -31,7 +32,12 @@ namespace build
                 //Run("dotnet", "clean -c Release -v m --nologo", echoPrefix: Prefix);
             });
 
-            Target(Targets.Build, DependsOn(Targets.CleanBuildOutput), () =>
+            Target(Targets.Restore, () =>
+            {
+                Run("dotnet", "restore -v n", echoPrefix: Prefix);
+            });
+
+            Target(Targets.Build, DependsOn(Targets.Restore, Targets.CleanBuildOutput), () =>
             {
                 Run("dotnet", "build -c Release --nologo", echoPrefix: Prefix);
             });
