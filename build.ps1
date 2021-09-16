@@ -4,22 +4,30 @@ New-Item -ItemType Directory -Force -Path ./nuget
 
 dotnet tool restore
 
-pushd ./src/Storage
-Invoke-Expression "./build.ps1 $args"
-popd
+$version = dotnet minver || throw 'dotnet minver'
 
-pushd ./src/IdentityServer4
-Invoke-Expression "./build.ps1 $args"
-popd
+$substitution = '${open}' + $version + '${close}'
+Write-Host "Update version by expression: $substitution"
+$targetFile = [System.IO.Path]::GetFullPath('src/Directory.Build.targets')
+$content = [System.IO.File]::ReadAllText($targetFile) -Replace '(?<open><IdentityServerVersion>)[^<]+(?<close></IdentityServerVersion>)', $substitution || throw "Read from $targetFile"
+[System.IO.File]::WriteAllText($targetFile, $content) || throw "Write to $targetFile"
 
-pushd ./src/EntityFramework.Storage
+Push-Location ./src/Storage
 Invoke-Expression "./build.ps1 $args"
-popd
+Pop-Location
 
-pushd ./src/EntityFramework
+Push-Location ./src/IdentityServer4
 Invoke-Expression "./build.ps1 $args"
-popd
+Pop-Location
 
-pushd ./src/AspNetIdentity
+Push-Location ./src/EntityFramework.Storage
 Invoke-Expression "./build.ps1 $args"
-popd
+Pop-Location
+
+Push-Location ./src/EntityFramework
+Invoke-Expression "./build.ps1 $args"
+Pop-Location
+
+Push-Location ./src/AspNetIdentity
+Invoke-Expression "./build.ps1 $args"
+Pop-Location
