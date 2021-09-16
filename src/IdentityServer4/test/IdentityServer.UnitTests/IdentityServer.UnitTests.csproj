@@ -5,9 +5,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>../../../../key.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>../../../../tec.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
-    <PublicSign Condition="'$(OS)' != 'Windows_NT'">true</PublicSign>
+    <!--<PublicSign Condition="'$(OS)' != 'Windows_NT'">true</PublicSign>-->
   </PropertyGroup>
 
   <ItemGroup>
