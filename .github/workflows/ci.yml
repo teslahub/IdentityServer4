@@ -1,0 +1,38 @@
+name: "CI"
+
+on:
+  push:
+    branches:
+      - main
+      - feature/**
+    tags:
+      - "*.*.*"
+  pull_request:
+    branches: [main]
+
+env:
+  DOTNET_NOLOGO: true
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        runs-on: [macOS-latest, ubuntu-latest, windows-latest]
+    name: ${{ matrix.runs-on }}
+    runs-on: ${{ matrix.runs-on }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Setup .NET Core 5.0.x
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.x
+      - name: dotnet info
+        run: dotnet --info
+      - name: build default
+        run: pwsh ./build.ps1
+      - name: push package
+        if: (matrix.runs-on == 'windows-latest') && (github.ref == 'refs/heads/main' || contains(github.ref, 'refs/tags/'))
+        run: dotnet nuget push .\nuget\*.nupkg -s https://www.myget.org/F/energy-company/api/v3/index.json -k ${{ secrets.MYGET }}
