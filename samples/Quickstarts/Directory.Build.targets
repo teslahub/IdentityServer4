@@ -1,7 +1,7 @@
 <Project>
 
     <PropertyGroup>
-        <AspNetVersion>5.0.0</AspNetVersion>
+        <AspNetVersion>6.0.0</AspNetVersion>
 		<IdentityServerVersion>6.*-*</IdentityServerVersion>
     </PropertyGroup>
 

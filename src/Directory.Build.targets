@@ -1,11 +1,19 @@
 <Project>
 
   <PropertyGroup>
+    <IdentityServerVersion>6.*</IdentityServerVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net5.0'">
     <FrameworkVersion>5.0.0</FrameworkVersion>
     <ExtensionsVersion>5.0.0</ExtensionsVersion>
     <EntityFrameworkVersion>5.0.0</EntityFrameworkVersion>
+  </PropertyGroup>
 
-    <IdentityServerVersion>5.0.0-*</IdentityServerVersion>
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
+    <FrameworkVersion>6.0.0</FrameworkVersion>
+    <ExtensionsVersion>6.0.0</ExtensionsVersion>
+    <EntityFrameworkVersion>6.0.0</EntityFrameworkVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,6 +30,9 @@
     <PackageReference Update="xunit.runner.visualstudio" Version="2.*" PrivateAssets="All" />
     <PackageReference Update="Moq" Version="4.*" />
     <PackageReference Update="Testing.Dynamic.Json" Version="1.*-*" />
+
+    <!--the netlah platform-->
+    <PackageReference Update="NetLah.Abstractions" Version="[0.2.0,1.0)" />
 
     <!--sample -->
     <PackageReference Update="Serilog" Version="2.9.0" />
@@ -47,8 +58,8 @@
     <PackageReference Update="Microsoft.Extensions.Options.ConfigurationExtensions" Version="$(ExtensionsVersion)" />
 
     <!--misc -->
-    <PackageReference Update="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="[6.8.0,7.0)" />
-    <PackageReference Update="System.IdentityModel.Tokens.Jwt" Version="[6.8.0,7.0)" />
+    <PackageReference Update="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="[6.10.0,7.0)" />
+    <PackageReference Update="System.IdentityModel.Tokens.Jwt" Version="[6.10.0,7.0)" />
     <PackageReference Update="System.Security.Principal.Windows" Version="5.0.0" />
     <PackageReference Update="AutoMapper" Version="[10.0.0,11.0)" />
 

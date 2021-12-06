@@ -1,7 +1,7 @@
 <Project>
 
   <PropertyGroup>
-    <AspNetVersion>3.1.0</AspNetVersion>    
+    <AspNetVersion>6.0.0</AspNetVersion>    
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,6 +14,6 @@
 
     <PackageReference Update="Newtonsoft.Json" Version="12.0.*" />
     
-    <PackageReference Update="System.IdentityModel.Tokens.Jwt" Version="[6.8.0,7.0)" />
+    <PackageReference Update="System.IdentityModel.Tokens.Jwt" Version="[6.10.0,7.0)" />
   </ItemGroup>
 </Project>
