@@ -61,8 +61,8 @@ namespace MvcHybrid.Controllers
             if (String.IsNullOrWhiteSpace(eventsJson)) throw new Exception("Invalid logout token");
 
             var events = JObject.Parse(eventsJson);
-            var logoutEvent = events.TryGetValue("http://schemas.openid.net/event/backchannel-logout");
-            if (logoutEvent == null) throw new Exception("Invalid logout token");
+            var logoutEventSuccess = events.TryGetValue("http://schemas.openid.net/event/backchannel-logout", out var logoutEvent);
+            if (!logoutEventSuccess || logoutEvent == null) throw new Exception("Invalid logout token");
 
             return claims;
         }
