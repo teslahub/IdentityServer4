@@ -1,26 +1,26 @@
 <Project>
 
-    <PropertyGroup>
-        <AspNetVersion>6.0.0</AspNetVersion>
-		<IdentityServerVersion>6.*-*</IdentityServerVersion>
-    </PropertyGroup>
+  <PropertyGroup>
+    <AspNetVersion>6.0.0</AspNetVersion>
+    <IdentityServerVersion>6.*-*</IdentityServerVersion>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Update="IdentityModel" Version="5.0.0" />
-        <PackageReference Update="Tec.IdentityServer4" Version="$(IdentityServerVersion)" />
-        <PackageReference Update="Tec.IdentityServer4.EntityFramework" Version="$(IdentityServerVersion)" />
-        <PackageReference Update="Tec.IdentityServer4.AspNetIdentity" Version="$(IdentityServerVersion)" />
+  <ItemGroup>
+    <PackageReference Update="IdentityModel" Version="5.0.0" />
+    <PackageReference Update="Tec.IdentityServer4" Version="$(IdentityServerVersion)" />
+    <PackageReference Update="Tec.IdentityServer4.EntityFramework" Version="$(IdentityServerVersion)" />
+    <PackageReference Update="Tec.IdentityServer4.AspNetIdentity" Version="$(IdentityServerVersion)" />
 
-        <PackageReference Update="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="$(AspNetVersion)" />
-        <PackageReference Update="Microsoft.AspNetCore.Authentication.JwtBearer" Version="$(AspNetVersion)" />
-        <PackageReference Update="Microsoft.AspNetCore.Authentication.Google" Version="$(AspNetVersion)" />
-        <PackageReference Update="Microsoft.EntityFrameworkCore.SqlServer" Version="$(AspNetVersion)" />
-        <PackageReference Update="Microsoft.EntityFrameworkCore.Design" Version="$(AspNetVersion)" />
+    <PackageReference Update="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="$(AspNetVersion)" />
+    <PackageReference Update="Microsoft.AspNetCore.Authentication.JwtBearer" Version="$(AspNetVersion)" />
+    <PackageReference Update="Microsoft.AspNetCore.Authentication.Google" Version="$(AspNetVersion)" />
+    <PackageReference Update="Microsoft.EntityFrameworkCore.SqlServer" Version="$(AspNetVersion)" />
+    <PackageReference Update="Microsoft.EntityFrameworkCore.Design" Version="$(AspNetVersion)" />
 
-        <PackageReference Update="Newtonsoft.Json" Version="12.0.*" />
+    <!--<PackageReference Update="Newtonsoft.Json" Version="12.0.*" />-->
 
-        <PackageReference Update="System.IdentityModel.Tokens.Jwt" Version="[6.8.0,7.0)" />
+    <PackageReference Update="System.IdentityModel.Tokens.Jwt" Version="[6.8.0,7.0)" />
 
-        <PackageReference Update="Serilog.AspNetCore" Version="3.4.0" />
-    </ItemGroup>
+    <PackageReference Update="Serilog.AspNetCore" Version="3.4.0" />
+  </ItemGroup>
 </Project>

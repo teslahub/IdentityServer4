@@ -1,4 +1,4 @@
-// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using System;
@@ -15,7 +15,7 @@ namespace IdentityServer.UnitTests.Extensions
     public class IResourceStoreExtensionsTests
     {
         [Fact]
-        public void GetAllEnabledResourcesAsync_on_duplicate_identity_scopes_should_fail()
+        public async Task GetAllEnabledResourcesAsync_on_duplicate_identity_scopes_should_fail()
         {
             var store = new MockResourceStore()
             {
@@ -25,7 +25,7 @@ namespace IdentityServer.UnitTests.Extensions
             };
 
             Func<Task> a = () => store.GetAllEnabledResourcesAsync();
-            a.Should().Throw<Exception>().And.Message.ToLowerInvariant().Should().Contain("duplicate").And.Contain("identity scopes");
+            await a.Should().ThrowAsync<Exception>().WithMessage("Duplicate identity scopes* A");
         }
 
         [Fact]
@@ -42,7 +42,7 @@ namespace IdentityServer.UnitTests.Extensions
         }
 
         [Fact]
-        public void GetAllEnabledResourcesAsync_on_duplicate_api_resources_should_fail()
+        public async Task GetAllEnabledResourcesAsync_on_duplicate_api_resources_should_fail()
         {
             var store = new MockResourceStore()
             {
@@ -50,7 +50,7 @@ namespace IdentityServer.UnitTests.Extensions
             };
 
             Func<Task> a = () => store.GetAllEnabledResourcesAsync();
-            a.Should().Throw<Exception>().And.Message.ToLowerInvariant().Should().Contain("duplicate").And.Contain("api resources");
+            await a.Should().ThrowAsync<Exception>().WithMessage("Duplicate*API resources*Names found: a");
         }
 
         [Fact]
@@ -65,7 +65,7 @@ namespace IdentityServer.UnitTests.Extensions
         }
 
         [Fact]
-        public void FindResourcesByScopeAsync_on_duplicate_identity_scopes_should_fail()
+        public async Task FindResourcesByScopeAsync_on_duplicate_identity_scopes_should_fail()
         {
             var store = new MockResourceStore()
             {
@@ -75,7 +75,7 @@ namespace IdentityServer.UnitTests.Extensions
             };
 
             Func<Task> a = () => store.FindResourcesByScopeAsync(new string[] { "A" });
-            a.Should().Throw<Exception>().And.Message.ToLowerInvariant().Should().Contain("duplicate").And.Contain("identity scopes");
+            await a.Should().ThrowAsync<Exception>().WithMessage("Duplicate identity scopes*Scopes found: A");
         }
 
         [Fact]
@@ -96,13 +96,13 @@ namespace IdentityServer.UnitTests.Extensions
         {
             var store = new MockResourceStore()
             {
-                ApiResources = { 
+                ApiResources = {
                     new ApiResource { Name = "api1", Scopes = { "a" } },
                     new ApiResource() { Name = "api2", Scopes = { "a" } },
                 },
-                ApiScopes = { 
-                    new ApiScope("a") 
-                } 
+                ApiScopes = {
+                    new ApiScope("a")
+                }
             };
 
             var result = await store.FindResourcesByScopeAsync(new string[] { "a" });
@@ -128,8 +128,8 @@ namespace IdentityServer.UnitTests.Extensions
         {
             var store = new MockResourceStore()
             {
-                ApiResources = { 
-                    new ApiResource { 
+                ApiResources = {
+                    new ApiResource {
                         Name = "api1", Scopes = { "a", "a" }
                     }
                 },
@@ -151,8 +151,8 @@ namespace IdentityServer.UnitTests.Extensions
             public Task<IEnumerable<ApiResource>> FindApiResourcesByNameAsync(IEnumerable<string> names)
             {
                 var apis = from a in ApiResources
-                          where names.Contains(a.Name)
-                          select a;
+                           where names.Contains(a.Name)
+                           select a;
                 return Task.FromResult(apis);
             }
 

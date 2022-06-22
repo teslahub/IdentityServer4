@@ -1,4 +1,4 @@
-// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -664,7 +664,7 @@ namespace IdentityServer4.Validation
             {
                 _logger.LogTrace("Client provided no scopes - checking allowed scopes list");
 
-                if (!_validatedRequest.Client.AllowedScopes.IsNullOrEmpty())
+                if (!_validatedRequest.Client.AllowedScopes.IsNullOrEmptyEx())
                 {
                     // this finds all the scopes the client is allowed to access
                     var clientAllowedScopes = new List<string>();

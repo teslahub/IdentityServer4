@@ -1,4 +1,4 @@
-// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -33,7 +33,7 @@ namespace IdentityServer4.Events
                 Token = Obfuscate(result.Token);
             }
             
-            if (!result.Claims.IsNullOrEmpty())
+            if (!result.Claims.IsNullOrEmptyEx())
             {
                 ClaimTypes = result.Claims.Select(c => c.Type).Distinct();
                 TokenScopes = result.Claims.Where(c => c.Type == "scope").Select(c => c.Value);

@@ -1,4 +1,4 @@
-// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -68,7 +68,7 @@ namespace IdentityServer4.Extensions
 
                 // scope claims
                 var scopeClaims = token.Claims.Where(x => x.Type == JwtClaimTypes.Scope).ToArray();
-                if (!scopeClaims.IsNullOrEmpty())
+                if (!scopeClaims.IsNullOrEmptyEx())
                 {
                     var scopeValues = scopeClaims.Select(x => x.Value).ToArray();
 
@@ -84,7 +84,7 @@ namespace IdentityServer4.Extensions
 
                 // amr claims
                 var amrClaims = token.Claims.Where(x => x.Type == JwtClaimTypes.AuthenticationMethod).ToArray();
-                if (!amrClaims.IsNullOrEmpty())
+                if (!amrClaims.IsNullOrEmptyEx())
                 {
                     var amrValues = amrClaims.Select(x => x.Value).Distinct().ToArray();
                     payload.Add(JwtClaimTypes.AuthenticationMethod, amrValues);

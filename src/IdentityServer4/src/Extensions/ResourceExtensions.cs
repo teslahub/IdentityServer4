@@ -105,7 +105,7 @@ namespace IdentityServer4.Models
         {
             var apis = apiResources.ToList();
 
-            if (apis.IsNullOrEmpty())
+            if (apis.IsNullOrEmptyEx())
             {
                 return new List<string>();
             }
