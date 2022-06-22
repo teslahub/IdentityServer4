@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Update="IdentityModel" Version="5.0.0" />
+    <PackageReference Update="IdentityModel" Version="6.0.0" />
 
     <!--<PackageReference Update="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="$(AspNetVersion)" />-->
     <PackageReference Update="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="$(AspNetVersion)" />

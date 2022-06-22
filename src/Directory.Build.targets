@@ -41,7 +41,7 @@
     <PackageReference Update="Serilog.Sinks.File" Version="5.*" />
 
     <!--our stuff -->
-    <PackageReference Update="IdentityModel" Version="5.0.0" />
+    <PackageReference Update="IdentityModel" Version="6.0.0" />
 
     <PackageReference Update="Tec.IdentityServer4" Version="$(IdentityServerVersion)" />
     <PackageReference Update="Tec.IdentityServer4.AspNetIdentity" Version="$(IdentityServerVersion)" />
