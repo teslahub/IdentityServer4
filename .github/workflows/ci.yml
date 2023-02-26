@@ -38,5 +38,7 @@ jobs:
       - name: build default
         run: pwsh ./build.ps1
       - name: push package
-        if: (matrix.runs-on == 'windows-latest') && (github.ref == 'refs/heads/main' || contains(github.ref, 'refs/tags/'))
+        env:
+          SECRET_MYGET: ${{ secrets.MYGET }}
+        if: (env.SECRET_MYGET != null) && (matrix.runs-on == 'windows-latest') && (github.ref == 'refs/heads/main' || contains(github.ref, 'refs/tags/'))
         run: dotnet nuget push .\nuget\*.nupkg -s https://www.myget.org/F/energy-company/api/v3/index.json -k ${{ secrets.MYGET }}
