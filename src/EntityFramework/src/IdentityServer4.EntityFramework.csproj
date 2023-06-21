@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <PackageId>Tec.IdentityServer4.EntityFramework</PackageId>
-    <TargetFrameworks>net6.0;net5.0</TargetFrameworks>
-
+    <TargetFrameworks>net8.0;net7.0;net6.0</TargetFrameworks>
+    
     <Description>EntityFramework persistence layer for IdentityServer4</Description>
     <Authors>Brock Allen;Dominick Baier;Scott Brady</Authors>
     <AssemblyName>IdentityServer4.EntityFramework</AssemblyName>
@@ -35,8 +35,5 @@
   <ItemGroup>
     <PackageReference Include="Tec.IdentityServer4" />
     <PackageReference Include="Tec.IdentityServer4.EntityFramework.Storage" />
-
-    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
-    <PackageReference Include="NetLah.Abstractions" />
   </ItemGroup>
 </Project>

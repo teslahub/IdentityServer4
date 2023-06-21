@@ -8,7 +8,7 @@ $version = dotnet minver || throw 'dotnet minver'
 
 $substitution = '${open}' + $version + '${close}'
 Write-Host "Update version by expression: $substitution"
-$targetFile = [System.IO.Path]::GetFullPath('src/Directory.Build.targets')
+$targetFile = [System.IO.Path]::GetFullPath('src/Directory.Build.override.targets')
 $content = [System.IO.File]::ReadAllText($targetFile) -Replace '(?<open><IdentityServerVersion>)[^<]+(?<close></IdentityServerVersion>)', $substitution || throw "Read from $targetFile"
 [System.IO.File]::WriteAllText($targetFile, $content) || throw "Write to $targetFile"
 

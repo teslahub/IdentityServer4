@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - feature/**
+      - dev*
     tags:
       - "*.*.*"
   pull_request:
@@ -18,27 +19,43 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        runs-on: [macos-11, ubuntu-latest, windows-latest]
+        runs-on: [macos-11, ubuntu-22.04, windows-latest]
     name: ${{ matrix.runs-on }}
     runs-on: ${{ matrix.runs-on }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Setup .NET Core 6.0.x
-        uses: actions/setup-dotnet@v1
+
+      - name: Setup .NET Core 8.0.x, 7.0.x, 6.0.x and 5.0.x
+        uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 6.0.x
-      - name: Setup .NET Core 5.0.x
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 5.0.x
+          dotnet-version: |
+            5.0.x
+            6.0.x
+            7.0.x
+            8.0.x-x
+
       - name: dotnet info
         run: dotnet --info
+
       - name: build default
         run: pwsh ./build.ps1
-      - name: push package
+
+      - name: push package CloudSmith Dev
+        env:
+          SECRET_PUSH_CLOUDSMITH_TOKEN: ${{ secrets.PUSH_CLOUDSMITH_TOKEN }}
+        if: (env.SECRET_PUSH_CLOUDSMITH_TOKEN != null) && (matrix.runs-on == 'windows-latest') && (github.ref == 'refs/heads/feature/' || contains(github.ref, 'refs/heads/dev'))
+        run: dotnet nuget push .\nuget\*.nupkg -s https://nuget.cloudsmith.io/netlah/net-dev1/v3/index.json --skip-duplicate -k ${{ env.SECRET_PUSH_CLOUDSMITH_TOKEN }}
+
+      - name: push package MyGet
         env:
           SECRET_MYGET: ${{ secrets.MYGET }}
         if: (env.SECRET_MYGET != null) && (matrix.runs-on == 'windows-latest') && (github.ref == 'refs/heads/main' || contains(github.ref, 'refs/tags/'))
-        run: dotnet nuget push .\nuget\*.nupkg -s https://www.myget.org/F/energy-company/api/v3/index.json -k ${{ secrets.MYGET }}
+        run: dotnet nuget push .\nuget\*.nupkg -s https://www.myget.org/F/energy-company/api/v3/index.json --skip-duplicate -k ${{ env.SECRET_MYGET }}
+
+      - name: push package CloudSmith
+        env:
+          SECRET_PUSH_CLOUDSMITH_TOKEN: ${{ secrets.PUSH_CLOUDSMITH_TOKEN }}
+        if: (env.SECRET_PUSH_CLOUDSMITH_TOKEN != null) && (matrix.runs-on == 'windows-latest') && (github.ref == 'refs/heads/main' || contains(github.ref, 'refs/tags/'))
+        run: dotnet nuget push .\nuget\*.nupkg -s https://nuget.cloudsmith.io/netlah/net-main1/v3/index.json --skip-duplicate -k ${{ env.SECRET_PUSH_CLOUDSMITH_TOKEN }}

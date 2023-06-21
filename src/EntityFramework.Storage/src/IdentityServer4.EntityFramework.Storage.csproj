@@ -2,8 +2,7 @@
 
   <PropertyGroup>
     <PackageId>Tec.IdentityServer4.EntityFramework.Storage</PackageId>
-    <TargetFrameworks>net6.0;net5.0</TargetFrameworks>
-
+    <TargetFrameworks>net8.0;net7.0;net6.0</TargetFrameworks>
     <Description>EntityFramework persistence layer for IdentityServer4</Description>
     <Authors>Brock Allen;Dominick Baier;Scott Brady</Authors>
     <PackageTags>OAuth2;OAuth 2.0;OpenID Connect;Security;Identity;IdentityServer;EntityFramework</PackageTags>
@@ -37,8 +36,6 @@
     <PackageReference Include="AutoMapper" />
 
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
-    <PackageReference Include="NetLah.Abstractions" />
   </ItemGroup>
 
 </Project>

@@ -1,14 +1,14 @@
 {
   "SignClient": {
+    "AzureAd": {
+      "AADInstance": "https://login.microsoftonline.com/",
+      "ClientId": "ca1a00f8-d63e-426a-a3ca-a0b32e5506c9",
+      "TenantId": "ca1a00f8-d63e-426a-a3ca-a0b32e5506c9"
+    },
 
-  "AzureAd": {
-    "AADInstance": "https://login.microsoftonline.com/",
-    "ClientId": "c248d68a-ba6f-4aa9-8a68-71fe872063f8",
-    "TenantId": "16076fdc-fcc1-4a15-b1ca-32c9a255900e"},
-    
     "Service": {
       "Url": "https://codesign.dotnetfoundation.org/",
-      "ResourceId": "https://SignService/3c30251f-36f3-490b-a955-520addb85001"
+      "ResourceId": "https://SignService/ca1a00f8-d63e-426a-a3ca-a0b32e5506c9"
     }
   }
 }
