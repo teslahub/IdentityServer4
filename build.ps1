@@ -8,9 +8,14 @@ $version = dotnet minver || throw 'dotnet minver'
 
 $substitution = '${open}' + $version + '${close}'
 Write-Host "Update version by expression: $substitution"
-$targetFile = [System.IO.Path]::GetFullPath('src/Directory.Build.override.targets')
-$content = [System.IO.File]::ReadAllText($targetFile) -Replace '(?<open><IdentityServerVersion>)[^<]+(?<close></IdentityServerVersion>)', $substitution || throw "Read from $targetFile"
-[System.IO.File]::WriteAllText($targetFile, $content) || throw "Write to $targetFile"
+
+function UpdateVersion($targetFile, $substitution) {
+    $content = [System.IO.File]::ReadAllText($targetFile) -Replace '(?<open><IdentityServerVersion>)[^<]+(?<close></IdentityServerVersion>)', $substitution || throw "Read from $targetFile"
+    [System.IO.File]::WriteAllText($targetFile, $content) || throw "Write to $targetFile"
+}
+
+UpdateVersion ([System.IO.Path]::GetFullPath('src/Shared/Directory.Build.override.targets')) $substitution
+UpdateVersion ([System.IO.Path]::GetFullPath('Directory.Build.override.targets')) $substitution
 
 Push-Location ./src/Storage
 Invoke-Expression "./build.ps1 $args"
