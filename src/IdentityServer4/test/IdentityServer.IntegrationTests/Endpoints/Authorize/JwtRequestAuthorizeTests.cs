@@ -29,10 +29,10 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
     {
         private const string Category = "Authorize endpoint with JWT requests";
 
-        private readonly IdentityServerPipeline _mockPipeline = new IdentityServerPipeline();
+        private readonly IdentityServerPipeline _mockPipeline = new();
         private readonly Client _client;
 
-        private readonly string _symmetricJwk = @"{ 'kty': 'oct', 'use': 'sig', 'kid': '1', 'k': 'nYA-IFt8xTsdBHe9hunvizcp3Dt7f6qGqudq18kZHNtvqEGjJ9Ud-9x3kbQ-LYfLHS3xM2MpFQFg1JzT_0U_F8DI40oby4TvBDGszP664UgA8_5GjB7Flnrlsap1NlitvNpgQX3lpyTvC2zVuQ-UVsXbBDAaSBUSlnw7SE4LM8Ye2WYZrdCCXL8yAX9vIR7vf77yvNTEcBCI6y4JlvZaqMB4YKVSfygs8XqGGCHjLpE5bvI-A4ESbAUX26cVFvCeDg9pR6HK7BmwPMlO96krgtKZcXEJtUELYPys6-rbwAIdmxJxKxpgRpt0FRv_9fm6YPwG7QivYBX-vRwaodL1TA', 'alg': 'HS256'}";
+        private readonly string _symmetricJwk = JsonHelper.NormalizeJson(@"{ 'kty': 'oct', 'use': 'sig', 'kid': '1', 'k': 'nYA-IFt8xTsdBHe9hunvizcp3Dt7f6qGqudq18kZHNtvqEGjJ9Ud-9x3kbQ-LYfLHS3xM2MpFQFg1JzT_0U_F8DI40oby4TvBDGszP664UgA8_5GjB7Flnrlsap1NlitvNpgQX3lpyTvC2zVuQ-UVsXbBDAaSBUSlnw7SE4LM8Ye2WYZrdCCXL8yAX9vIR7vf77yvNTEcBCI6y4JlvZaqMB4YKVSfygs8XqGGCHjLpE5bvI-A4ESbAUX26cVFvCeDg9pR6HK7BmwPMlO96krgtKZcXEJtUELYPys6-rbwAIdmxJxKxpgRpt0FRv_9fm6YPwG7QivYBX-vRwaodL1TA', 'alg': 'HS256'}");
         private readonly RsaSecurityKey _rsaKey;
 
         public JwtRequestAuthorizeTests()
@@ -139,9 +139,9 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 Username = "bob",
                 Claims = new Claim[]
                 {
-                    new Claim("name", "Bob Loblaw"),
-                    new Claim("email", "bob@loblaw.com"),
-                    new Claim("role", "Attorney")
+                    new("name", "Bob Loblaw"),
+                    new("email", "bob@loblaw.com"),
+                    new("role", "Attorney")
                 }
             });
 
@@ -151,19 +151,16 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 new IdentityResources.Email()
             });
             _mockPipeline.ApiResources.AddRange(new ApiResource[] {
-                new ApiResource
-                {
+                new() {
                     Name = "api",
                     Scopes = { "api1", "api2" }
                 }
             });
             _mockPipeline.ApiScopes.AddRange(new ApiScope[] {
-                new ApiScope
-                {
+                new() {
                     Name = "api1"
                 },
-                new ApiScope
-                {
+                new() {
                     Name = "api2"
                 }
             });
@@ -171,7 +168,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
             _mockPipeline.Initialize();
         }
 
-        string CreateRequestJwt(string issuer, string audience, SigningCredentials credential, Claim[] claims, bool setJwtTyp = false)
+        private string CreateRequestJwt(string issuer, string audience, SigningCredentials credential, Claim[] claims, bool setJwtTyp = false)
         {
             var handler = new JwtSecurityTokenHandler();
             handler.OutboundClaimTypeMap.Clear();
