@@ -16,6 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" />
+   
     <PackageReference Include="Tec.IdentityServer4" />
     <PackageReference Include="Tec.IdentityServer4.Storage" />
 
