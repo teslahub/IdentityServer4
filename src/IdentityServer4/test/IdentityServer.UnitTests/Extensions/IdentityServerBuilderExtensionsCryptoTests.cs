@@ -2,13 +2,13 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
+using System;
+using System.IO;
+using System.Security.Cryptography;
 using IdentityServer4;
 using IdentityServer4.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.IO;
-using System.Security.Cryptography;
 using Xunit;
 
 namespace IdentityServer.UnitTests.Extensions
@@ -21,7 +21,7 @@ namespace IdentityServer.UnitTests.Extensions
             IServiceCollection services = new ServiceCollection();
             IIdentityServerBuilder identityServerBuilder = new IdentityServerBuilder(services);
 
-            String json =
+            var json =
             @"{
                 ""alg"" : ""RS256"",
                 ""kty"" : ""RSA"",
@@ -33,11 +33,11 @@ namespace IdentityServer.UnitTests.Extensions
                 ""q"" : ""yDKBrS8l1DOx4dwP9hdwhqZJ3XahidiIZSL7m46I/6+cjaki/1mtNiA60MOgqTKegP7Fo7jAYvliqQwnvVGmQvLv19cfKywlIuKN9DdkLHnKh75hfo7aakEbO7GJ5zVgsNnKOdf8wvpclfvIuRDEVva4cksPzsJy6K7C8ENCSCM="",
                 ""dp"" :  ""GlYJ6o6wgawxCEQ5z5uWwETau5CS/Fk7kI2ceI14SZVHzlJQC2WglAcnQcqhmQCk57Xsy5iLM6vKyi8sdMJPh+nvR2HlyNA+w7YBy4L7odqn01VmLgv7zVVjZpNq4ZXEoDC1Q+xjtF1LoYaUt7wsRLp+a7znuPyHBXj1sAAeBwk="",
                 ""dq"" :  ""W8OK3S83T8VCTBzq1Ap6cb3XLcQq11yBaJpYaj0zXr/IKsbUW+dnFeBAFWEWS3gAX3Bod1tAFB3rs0D3FjhO1XE1ruHUT520iAEAwGiDaj+JLh994NzqELo3GW2PoIM/BtFNeKYgHd9UgQsgPnQJCzOb6Aev/z3yHeW9RRQPVbE="",
-                ""qi"" :  ""w4KdmiDN1GtK71JxaasqmEKPNfV3v2KZDXKnfyhUsdx/idKbdTVjvMOkxFPJ4FqV4yIVn06f3QHTm4NEG18Diqxsrzd6kXQIHOa858tLsCcmt9FoGfrgCFgVceh3K/Zah/r8rl9Y61u0Z1kZumwMvFpFE+mVU01t9HgTEAVkHTc="",
+                ""qi"" :  ""w4KdmiDN1GtK71JxaasqmEKPNfV3v2KZDXKnfyhUsdx/idKbdTVjvMOkxFPJ4FqV4yIVn06f3QHTm4NEG18Diqxsrzd6kXQIHOa858tLsCcmt9FoGfrgCFgVceh3K/Zah/r8rl9Y61u0Z1kZumwMvFpFE+mVU01t9HgTEAVkHTc=""
             }";
 
-            JsonWebKey jsonWebKey = new JsonWebKey(json);
-            SigningCredentials credentials = new SigningCredentials(jsonWebKey, jsonWebKey.Alg);
+            var jsonWebKey = new JsonWebKey(json);
+            var credentials = new SigningCredentials(jsonWebKey, jsonWebKey.Alg);
             identityServerBuilder.AddSigningCredential(credentials);
         }
 
@@ -47,7 +47,7 @@ namespace IdentityServer.UnitTests.Extensions
             IServiceCollection services = new ServiceCollection();
             IIdentityServerBuilder identityServerBuilder = new IdentityServerBuilder(services);
 
-            String json =
+            var json =
             @"{
                 ""alg"" : ""HS256"",
                 ""kty"" : ""oct"",
@@ -55,8 +55,8 @@ namespace IdentityServer.UnitTests.Extensions
                 ""k"" : ""y5FHaQFtC294HLAtPXAcMkxZ5gHzCq24223vSYQUrDuu-3CUw7UzPru-AX30ubeB2IM_gUsNQ80bX22wwSk_3LC6XxYxqeGJZSeoQqHG0VNbaWCVkqeuB_HOiL1-ksPfGT-o8_A_Uv-6zi2NaEOYpnIyff5LpdW__LhiE-bhIenaw7GhoXSAfsGEZfNZpUUOU35NAiN2dv0T5vptb87wkL1I2zLhV0pdLvWsDWgQPINEa8bbCA_mseBYpB1eioZvt0TZbp6CL9tiEoiikYV_F3IutrJ2SOWYtDNFeQ3sbyYP7zTzh9a2eyaM8ca5_q3qosI92AbZ7WpEFLa9cZ_O7g""
             }";
 
-            JsonWebKey jsonWebKey = new JsonWebKey(json);
-            SigningCredentials credentials = new SigningCredentials(jsonWebKey, jsonWebKey.Alg);
+            var jsonWebKey = new JsonWebKey(json);
+            var credentials = new SigningCredentials(jsonWebKey, jsonWebKey.Alg);
             Assert.Throws<InvalidOperationException>(() => identityServerBuilder.AddSigningCredential(credentials));
         }
 
@@ -72,7 +72,9 @@ namespace IdentityServer.UnitTests.Extensions
             var filename = Path.Combine(Directory.GetCurrentDirectory(), "tempkey.rsa");
 
             if (File.Exists(filename))
+            {
                 File.Delete(filename);
+            }
         }
 
         [Fact]
@@ -94,7 +96,9 @@ namespace IdentityServer.UnitTests.Extensions
                 var filename = Path.Combine(Directory.GetCurrentDirectory(), "tempkey.rsa");
 
                 if (File.Exists(filename))
+                {
                     File.Delete(filename);
+                }
             }
         }
 
