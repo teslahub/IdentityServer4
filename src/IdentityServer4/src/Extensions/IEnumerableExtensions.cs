@@ -13,6 +13,18 @@ namespace IdentityServer4.Extensions
 {
     public static class IEnumerableExtensions
     {
+#if NET6_0
+        public static bool IsNullOrEmpty<T>(this IEnumerable<T> list)
+        {
+            if (list == null)
+            {
+                return true;
+            }
+
+            return !list.Any();
+        }
+#endif
+
         [DebuggerStepThrough]
         internal static bool IsNullOrEmptyEx<T>(this IEnumerable<T> list)
         {
@@ -21,12 +33,7 @@ namespace IdentityServer4.Extensions
                 return true;
             }
 
-            if (!list.Any())
-            {
-                return true;
-            }
-
-            return false;
+            return !list.Any();
         }
 
         public static bool HasDuplicates<T, TProp>(this IEnumerable<T> list, Func<T, TProp> selector)
